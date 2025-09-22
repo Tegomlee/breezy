@@ -1,0 +1,28 @@
+# Build folders
+/build/
+/CMakeFiles/
+/Makefile
+/CMakeCache.txt
+/*.cmake
+/*.log
+
+# Executables
+*.exe
+*.dll
+*.obj
+*.o
+*.pdb
+*.ilk
+*.idb
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files (Visual Studio, VSCode)
+.vscode/
+*.user
+*.suo
+*.vcxproj.user
+*.VC.db
+*.VC.opendb

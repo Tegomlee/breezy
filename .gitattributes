@@ -1,0 +1,17 @@
+# Treat C++ source files as text
+*.cpp  text
+*.h    text
+*.hpp  text
+
+# Treat markdown as text
+*.md   text
+
+# Handle line endings consistently
+* text=auto
+
+# Prevent CRLF warnings for binaries
+*.dll  binary
+*.exe  binary
+*.o    binary
+*.obj  binary
+*.pdb  binary
