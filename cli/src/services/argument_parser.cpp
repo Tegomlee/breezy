@@ -27,20 +27,38 @@
     ============================================================================================
 */
 
-#include "commands/version_command.hpp"
-
-#include <iostream>
+#include "services/argument_parser.hpp"
 
 namespace breezy::cli {
-    std::string VersionCommand::name() const {
-        return "version";
+    ArgumentParser::ArgumentParser() {
+        aliases_["--version"] = "version";
+        aliases_["-v"] = "version";
+        aliases_["--help"] = "help";
+        aliases_["-h"] = "help";
     }
 
-    int VersionCommand::execute(const std::vector<std::string>& args) const {
-        std::cout << "Breezy Version "
-                << MAJOR << "."
-                << MINOR << "."
-                << PATCH << "\n";
-        return 0;
+    const std::pair<std::string, std::vector<std::string>> 
+    ArgumentParser::parse(int argc, char* argv[]) const {
+        if (argc < 2) {
+            return { "help", {} }; // default command if none are passed.
+        }
+
+        // TODO: Support multiple commands
+        std::string cmd = argv[1];
+
+        // Resolve the command alias
+        auto it = aliases_.find(cmd);
+        std::string alias;
+        if (it != aliases_.end()) {
+            alias = it->second;
+        }
+        else {
+            alias = cmd;
+        }
+
+        // Collect remaining arguments
+        std::vector<std::string> args(argv + 2, argv + argc);
+
+        return { alias, args };
     }
 }

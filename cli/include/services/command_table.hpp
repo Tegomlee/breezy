@@ -27,8 +27,8 @@
     ============================================================================================
 */
 
-#ifndef BREEZY_CLI_COMMAND_TABLE
-#define BREEZY_CLI_COMMAND_TABLE
+#ifndef BREEZY_CLI_COMMAND_TABLE_HPP
+#define BREEZY_CLI_COMMAND_TABLE_HPP
 
 #include <map>
 #include <memory>
@@ -47,4 +47,4 @@ namespace breezy::cli {
     };
 }
 
-#endif // !BREEZY_CLI_COMMAND_TABLE
+#endif // !BREEZY_CLI_COMMAND_TABLE_HPP

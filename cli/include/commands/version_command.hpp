@@ -27,6 +27,9 @@
     ============================================================================================
 */
 
+#ifndef BREEZY_CLI_VERSION_COMMAND_HPP
+#define BREEZY_CLI_VERSION_COMMAND_HPP
+
 #include "commands/command_base.hpp"
 
 namespace breezy::cli {
@@ -41,3 +44,5 @@ namespace breezy::cli {
         int execute(const std::vector<std::string>& args) const override;
     };
 }
+
+#endif // !BREEZY_CLI_VERSION_COMMAND_HPP

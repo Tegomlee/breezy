@@ -27,20 +27,18 @@
     ============================================================================================
 */
 
-#include "commands/version_command.hpp"
+#ifndef BREEZY_CLI_HELP_COMMAND_HPP
+#define BREEZY_CLI_HELP_COMMAND_HPP
 
-#include <iostream>
+#include "commands/command_base.hpp"
 
 namespace breezy::cli {
-    std::string VersionCommand::name() const {
-        return "version";
-    }
+    class HelpCommand : public CommandBase {
+    public:
+        std::string name() const override;
 
-    int VersionCommand::execute(const std::vector<std::string>& args) const {
-        std::cout << "Breezy Version "
-                << MAJOR << "."
-                << MINOR << "."
-                << PATCH << "\n";
-        return 0;
-    }
+        int execute(const std::vector<std::string>& args) const override;
+    };
 }
+
+#endif // !BREEZY_CLI_HELP_COMMAND_HPP

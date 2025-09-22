@@ -27,6 +27,9 @@
     ============================================================================================
 */
 
+#ifndef BREEZY_CLI_COMMAND_BASE_HPP
+#define BREEZY_CLI_COMMAND_BASE_HPP
+
 #include <string>
 #include <vector>
 
@@ -40,3 +43,5 @@ namespace breezy::cli {
         virtual int execute(const std::vector<std::string>& args) const = 0;
     };
 } // breezy::cli
+
+#endif // !BREEZY_CLI_COMMAND_BASE_HPP

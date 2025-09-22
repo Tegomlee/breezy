@@ -27,20 +27,23 @@
     ============================================================================================
 */
 
-#include "commands/version_command.hpp"
+#ifndef BREEZY_CLI_ARGUEMENT_PARSER_HPP
+#define BREEZY_CLI_ARGUEMENT_PARSER_HPP
 
-#include <iostream>
+#include <unordered_map>
+#include <string>
+#include <vector>
 
 namespace breezy::cli {
-    std::string VersionCommand::name() const {
-        return "version";
-    }
+    class ArgumentParser {
+    public:
+        ArgumentParser();
 
-    int VersionCommand::execute(const std::vector<std::string>& args) const {
-        std::cout << "Breezy Version "
-                << MAJOR << "."
-                << MINOR << "."
-                << PATCH << "\n";
-        return 0;
-    }
+        const std::pair<std::string, std::vector<std::string>> parse(int argc, char* argv[]) const;
+
+    private:
+        std::unordered_map<std::string, std::string> aliases_;
+    };
 }
+
+#endif // !BREEZY_CLI_ARGUEMENT_PARSER_HPP

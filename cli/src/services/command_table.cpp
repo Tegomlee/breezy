@@ -30,11 +30,13 @@
 #include "services/command_table.hpp"
 
 #include "commands/version_command.hpp"
+#include "commands/help_command.hpp"
 
 namespace breezy::cli {
     CommandTable::CommandTable() {
         // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();    
+        commands_["version"] = std::make_unique<VersionCommand>();
+        commands_["help"] = std::make_unique<HelpCommand>();    
     }
 
     const CommandBase* CommandTable::get_command(const std::string& name) const {

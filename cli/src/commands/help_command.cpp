@@ -27,20 +27,18 @@
     ============================================================================================
 */
 
-#include "commands/version_command.hpp"
+#include "commands/help_command.hpp"
 
 #include <iostream>
 
 namespace breezy::cli {
-    std::string VersionCommand::name() const {
-        return "version";
+    std::string HelpCommand::name() const {
+        return "help";
     }
 
-    int VersionCommand::execute(const std::vector<std::string>& args) const {
-        std::cout << "Breezy Version "
-                << MAJOR << "."
-                << MINOR << "."
-                << PATCH << "\n";
+    int HelpCommand::execute(const std::vector<std::string>& args) const {
+        std::cout << "Usage: breezy <command> [arguements]" << std::endl;
+        std::cout << "Example: breezy --help|-h" << std::endl;
         return 0;
     }
 }

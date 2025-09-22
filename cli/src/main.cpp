@@ -30,27 +30,23 @@
 #include <iostream>
 #include <vector>
 
+#include "services/argument_parser.hpp"
 #include "services/command_table.hpp"
 
 int main(int argc, char* argv[]) {
-    breezy::cli::CommandTable table;
+    using namespace breezy::cli;
 
-    if (argc < 2) {
-        std::cerr << "No command provided." << std::endl;
-        return -1;
-    }
+    CommandTable cmd_table;
+    ArgumentParser arg_parser;
 
-    std::string cmd_name = argv[1];
+    // Parse input
+    auto [cmd_name, args] = arg_parser.parse(argc, argv);
 
-    auto cmd = table.get_command(cmd_name);
+    // Lookup command
+    auto cmd = cmd_table.get_command(cmd_name);
     if (!cmd) {
         std::cerr << "Unknown command: " << cmd_name << std::endl;
-        return -2;
-    }
-
-    std::vector<std::string> args;
-    for (int i = 2; i < argc; ++i) {
-        args.push_back(argv[i]);
+        return -1;
     }
 
     return cmd->execute(args);
