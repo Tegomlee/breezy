@@ -27,24 +27,31 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
-
-#include <memory>
-
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
 #include "commands/run_command.hpp"
 
-namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
+#include <iostream>
+#include <string>
+
+#include "breezy_runtime_interface.h"
+
+namespace breezy::cli {         
+    std::string RunCommand::name() const {
+        return "run";
     }
 
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
+    int RunCommand::execute(const std::vector<std::string>& args) const {
+        // Expected usage: breezy --run -s "code"
+        if (args.size() >= 2 && args[0] == "-s") {
+            const std::string& code = args[1];
+
+            breezy_runtime_init();
+            breezy_runtime_run_string(code.c_str());
+            breezy_runtime_shutdown();
+
+            return 0;
+        }
+
+        std::cerr << "Usage: breezy --run -s \"<code>\"" << std::endl;
+        return -3;
     }
 }

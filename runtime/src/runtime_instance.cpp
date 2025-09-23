@@ -27,24 +27,61 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
+#include "breezy/runtime_instance.hpp"
 
-#include <memory>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <ostream>
+#include <sstream>
+#include <string>
 
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
-#include "commands/run_command.hpp"
+#include "breezy/frontend/lexer.hpp"
 
-namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
+namespace breezy::runtime {
+    RuntimeInstance::RuntimeInstance() {
+        // TODO: Initialize future components
     }
 
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
+    RuntimeInstance::~RuntimeInstance() {
+        // TODO: Cleanup future components
+    }
+
+    void RuntimeInstance::run_file(const std::string& filepath) {
+        std::filesystem::path path(filepath);
+
+        if (!std::filesystem::exists(path)) {
+            std::cerr << "File does not exist: " << path << std::endl;
+            return;
+        }
+
+        if (!std::filesystem::is_regular_file(path)) {
+            std::cerr << "Not a regular file: " << path << std::endl;
+            return;
+        }
+
+        std::ifstream file(path, std::ios::in);
+        if (!file) {
+            std::cerr << "Failed to open file: " << path << std::endl;
+            return;
+        }
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        execute(buffer.str());
+    }
+
+    void RuntimeInstance::run_string(const std::string& code) {
+        execute(code);
+    }
+
+    void RuntimeInstance::execute(const std::string& code) {
+        Lexer lexer(code);
+        auto tokens = lexer.tokenize();
+
+        // For now, just print the tokens
+        for (const auto& t : tokens) {
+            std::cout << static_cast<int>(t.type) << ": " << t.lexeme << "\n";
+        }
     }
 }

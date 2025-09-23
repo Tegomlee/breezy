@@ -35,6 +35,8 @@ namespace breezy::cli {
         aliases_["-v"] = "version";
         aliases_["--help"] = "help";
         aliases_["-h"] = "help";
+        aliases_["--run"] = "run";
+        aliases_["-r"] = "run";
     }
 
     const std::pair<std::string, std::vector<std::string>> 

@@ -27,24 +27,42 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
+#ifndef BREEZY_RUNTIME_FRONTEND_LEXER_HPP
+#define BREEZY_RUNTIME_FRONTEND_LEXER_HPP
 
-#include <memory>
+#include <cstddef>
+#include <string_view>
+#include <vector>
 
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
-#include "commands/run_command.hpp"
+#include "breezy/frontend/token.hpp"
 
-namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
-    }
+namespace breezy::runtime {
+    class Lexer {
+    public:
+        explicit Lexer(std::string_view source);
 
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
-    }
+        std::vector<Token> tokenize();
+
+    private:
+        static constexpr std::string_view keywords_[] = {
+            "var",
+            "return",
+            "if",
+            "else"
+        };
+
+        std::string_view source_;
+        std::size_t position_ = 0;
+        std::uint32_t line_ = 1;
+        std::uint32_t column_ = 1;
+
+        char peek() const;
+        char advance();
+        bool is_at_end() const;
+        void skip_white_space();
+
+        bool is_keyword(std::string_view lexeme);
+    };
 }
+
+#endif // !BREEZY_RUNTIME_FRONTEND_LEXER_HPP

@@ -27,24 +27,17 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
+#ifndef BREEZY_CLI_RUN_COMMAND_HPP
+#define BREEZY_CLI_RUN_COMMAND_HPP
 
-#include <memory>
-
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
-#include "commands/run_command.hpp"
+#include "commands/command_base.hpp"
 
 namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
-    }
+    class RunCommand : public CommandBase {
+        std::string name() const override;
 
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
-    }
+        int execute(const std::vector<std::string>& args) const override;
+    };
 }
+
+#endif // !BREEZY_CLI_RUN_COMMAND_HPP

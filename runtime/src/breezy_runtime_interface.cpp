@@ -27,24 +27,33 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
+#include "breezy_runtime_interface.h"
 
-#include <memory>
+#include "breezy/runtime_instance.hpp"
 
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
-#include "commands/run_command.hpp"
+static breezy::runtime::RuntimeInstance* g_runtime = nullptr;
 
-namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
+extern "C" {
+    void breezy_runtime_init() {
+        if (!g_runtime) {
+            g_runtime = new breezy::runtime::RuntimeInstance();
+        }
     }
 
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
+    void breezy_runtime_shutdown() {
+        delete g_runtime;
+        g_runtime = nullptr;
+    }
+
+    void breezy_runtime_run_string(const char* code) {
+        if (g_runtime) {
+            g_runtime->run_string(code);
+        }
+    }
+
+    void breezy_runtime_run_file(const char* filepath) {
+        if (g_runtime) {
+            g_runtime->run_file(filepath);
+        }
     }
 }

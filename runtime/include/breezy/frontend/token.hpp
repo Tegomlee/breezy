@@ -27,24 +27,28 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
+#ifndef BREEZY_RUNTIME_FRONTEND_TOKEN_HPP
+#define BREEZY_RUNTIME_FRONTEND_TOKEN_HPP
 
-#include <memory>
+#include <cstdint>
+#include <string_view>
 
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
-#include "commands/run_command.hpp"
+namespace breezy::runtime {
+    enum class TokenType {
+        Identifier,
+        Number,
+        String,
+        Keyword,
+        Symbol,
+        EndOfFile
+    };
 
-namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
-    }
-
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
-    }
+    struct Token {
+        TokenType type;
+        std::string_view lexeme;
+        std::uint32_t line;
+        std::uint32_t column;
+    };
 }
+
+#endif // !BREEZY_RUNTIME_FRONTEND_TOKEN_HPP

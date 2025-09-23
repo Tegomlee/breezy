@@ -27,24 +27,30 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
+#ifndef BREEZY_RUNTIME_INTERFACE_H
+#define BREEZY_RUNTIME_INTERFACE_H
 
-#include <memory>
+#ifdef _WIN32
+#  ifdef BREEZY_BUILD
+#    define BREEZY_RUNTIME_API __declspec(dllexport)
+#  else
+#    define BREEZY_RUNTIME_API __declspec(dllimport)
+#  endif
+#else
+    #error "Zephyr, breezy's runtime environment, currently only supports Windows"
+#endif
 
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
-#include "commands/run_command.hpp"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
-    }
+BREEZY_RUNTIME_API void breezy_runtime_init();
+BREEZY_RUNTIME_API void breezy_runtime_shutdown();
+BREEZY_RUNTIME_API void breezy_runtime_run_string(const char* code);
+BREEZY_RUNTIME_API void breezy_runtime_run_file(const char* filepath);
 
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
-    }
+#ifdef __cplusplus
 }
+#endif
+
+#endif // !BREEZY_RUNTIME_INTERFACE_H

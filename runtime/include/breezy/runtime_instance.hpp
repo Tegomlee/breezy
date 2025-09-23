@@ -27,24 +27,23 @@
     ============================================================================================
 */
 
-#include "services/command_table.hpp"
+#ifndef BREEZY_RUNTIME_INSTANCE_HPP
+#define BREEZY_RUNTIME_INSTANCE_HPP
 
-#include <memory>
+#include <string>
 
-#include "commands/version_command.hpp"
-#include "commands/help_command.hpp"
-#include "commands/run_command.hpp"
+namespace breezy::runtime {
+    class RuntimeInstance {
+    public:
+        RuntimeInstance();
+        ~RuntimeInstance();
 
-namespace breezy::cli {
-    CommandTable::CommandTable() {
-        // Register the commands
-        commands_["version"] = std::make_unique<VersionCommand>();
-        commands_["help"] = std::make_unique<HelpCommand>();
-        commands_["run"] = std::make_unique<RunCommand>();    
-    }
+        void run_file(const std::string& filepath);
+        void run_string(const std::string& code);
 
-    const CommandBase* CommandTable::get_command(const std::string& name) const {
-        auto it = commands_.find(name);
-        return it != commands_.end() ? it->second.get() : nullptr;
-    }
+    private:
+        void execute(const std::string& code);
+    };
 }
+
+#endif // !BREEZY_RUNTIME_INSTANCE_HPP
