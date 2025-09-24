@@ -34,9 +34,13 @@
 #include <iostream>
 #include <ostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
+#include <vector>
 
+#include "breezy/frontend/interpreter.hpp"
 #include "breezy/frontend/lexer.hpp"
+#include "breezy/frontend/parser.hpp"
 
 namespace breezy::runtime {
     RuntimeInstance::RuntimeInstance() {
@@ -76,12 +80,30 @@ namespace breezy::runtime {
     }
 
     void RuntimeInstance::execute(const std::string& code) {
+        // Tokenize
         Lexer lexer(code);
         auto tokens = lexer.tokenize();
 
-        // For now, just print the tokens
-        for (const auto& t : tokens) {
-            std::cout << static_cast<int>(t.type) << ": " << t.lexeme << "\n";
+        // Parse
+        Parser parser(tokens);
+        std::vector<Stmt> program;
+        try {
+            program = parser.parse();
+        }
+        catch (const std::runtime_error& e) {
+            std::cerr << "Parser error: " << e.what() << std::endl;
+            return;
+        }
+
+        // Interpret
+        Interpreter interpreter;
+        for (auto& stmt : program) {
+            try {
+                interpreter.execute(stmt);
+            }
+            catch (const std::runtime_error& e) {
+                std::cerr << "Runtime error: " << e.what() << std::endl;
+            }
         }
     }
 }

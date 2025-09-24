@@ -3,6 +3,8 @@ add_library(zephyr SHARED
     src/runtime_instance.cpp
 
     src/frontend/lexer.cpp
+    src/frontend/parser.cpp
+    src/frontend/interpreter.cpp
 )
 
 target_include_directories(zephyr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
