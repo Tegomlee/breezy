@@ -40,7 +40,7 @@ namespace breezy::cli {
     }
 
     int RunCommand::execute(const std::vector<std::string>& args) const {
-        // Expected usage: breezy --run -s "code"
+        // Case 1: inline string (breezy --run -s "code")
         if (args.size() >= 2 && args[0] == "-s") {
             const std::string& code = args[1];
 
@@ -51,7 +51,21 @@ namespace breezy::cli {
             return 0;
         }
 
-        std::cerr << "Usage: breezy --run -s \"<code>\"" << std::endl;
+        // Case 2: script file (breezy --run myscript.bz)
+        if (args.size() >= 1) {
+            const std::string& filename = args[0];
+
+            breezy_runtime_init();
+            breezy_runtime_run_file(filename.c_str());
+            breezy_runtime_shutdown();
+
+            return 0;
+        }
+
+        // No valid arguments
+        std::cerr << "Usage:\n"
+                  << "  breezy --run|-r -s \"<code>\"\n"
+                  << "  breezy --run|-r <scriptfile>\n";
         return -3;
     }
 }
